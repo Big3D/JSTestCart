@@ -1,0 +1,17 @@
+
+.card{
+    border-style: solid;
+    border-width: 1px;
+}
+.card-body{
+    outline: auto;
+}
+.shopcont{
+    width: 100vw;
+    position: absolute;
+}
+.shopcart{
+    margin: 10px;
+    align-self: center;
+    position: relative;
+}
