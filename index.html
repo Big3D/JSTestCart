@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script src="main.js" defer></script>
+    
     <!-- JavaScript Bundle with Popper -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     
@@ -38,6 +39,9 @@
               <li>
                 <button onclick="ResetCounter()"> ResetTotal</button>
               </li>
+              <li>
+                <button onclick="ResetArray()"> Reset Array</button>
+              </li>
             </ul>            
           </div>        
         </div>        
@@ -45,7 +49,7 @@
 
     <div class="shopcont row">
       <div class="shopcart col-md-8 mx-auto">
-          Shopping Cart : <span id="ShopCart"></span>
+          Shopping Cart : <span id="ShopCart">0</span>
       </div>
     </div>
 <br>
@@ -57,11 +61,21 @@
             <div class="card-body">
               <h5 class="card-title">Card title</h5>
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <button href="#" class="btn btn-primary" onclick="addToCart(this.value, 'Home', this.vegan)" value="yes" data-page="Home" data-vegan="No">Go somewhere</button>
+              <button href="#" class="btn btn-primary" onclick="addToCart(this)" value="15" data-page="Home" data-vegan="No">Go somewhere</button>
             </div>
         </div>
     </div>
     <br>
+    <div class="ShopCartShow">
+      <table id="shopCartTable">
+        <tr>
+          <th>Price</th>
+          <th>Store</th>
+          <th>Vegan</th>
+        </tr>
+      </table>
+      
+    </div>
     <!-- <div>
       <div class="card" style="width: 18rem;">
           <img src="" class="card-img-top" alt="">
@@ -75,6 +89,6 @@
 
 
     
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </body>
 </html>
