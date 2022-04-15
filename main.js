@@ -1,83 +1,97 @@
+//// Quick option to stringify objects into the localstorage
 Storage.prototype.setObj = function(key, obj) {
     return this.setItem(key, JSON.stringify(obj))
 }
+//// Quick option to parse objects from the localstorage
 Storage.prototype.getObj = function(key) {
     return JSON.parse(this.getItem(key))
 }
 
-let shopcartTotal;
-console.log(localStorage.getItem("gTotal"));
-console.log(localStorage.getObj("cartList"));
+//// Update the subtotal on load
 document.getElementById("ShopCart").innerText = localStorage.getItem("gTotal");
 
-let shopCartArray;
-shopCartArray = localStorage.getObj("cartList");
-console.log(shopCartArray);
+//// Get reference to the Shopping cart objects
+let shopCartArray = localStorage.getObj("cartList");
 
-
+//// Checks if shopping cart is null
+if (shopCartArray != null){
+    ShowCart();
+}
 
 function ResetCounter(){
-localStorage.setItem("gTotal", 0);
-document.getElementById("ShopCart").innerText = localStorage.getItem("gTotal");
+    //// Set the subtotal back to 0
+    localStorage.setItem("gTotal", 0);
+    document.getElementById("ShopCart").innerText = localStorage.getItem("gTotal");
 }
 function ResetArray(){
-    localStorage.setObj("cartList", "")
+    //// Remove all object from the local storage
+    localStorage.clear();
 }
 
 function addToCart(buttonData){
-    // console.log(Number(buttonData.value));
-    // console.log(buttonData.dataset.page);
-    // console.log(buttonData.dataset.vegan);
+
+    //// Grab all the button values and store them to their own variables
     let itemCost = buttonData.value;
     let itemLocal = buttonData.dataset.page;
     let itemVegan = buttonData.dataset.vegan;
-
+    //// Instantiate the array, grab the local storage and set the values to an array
     let cartArray = [];
     let cartArrayStore = localStorage.getObj("cartList");
     let storeItems = [{'price': itemCost, 'pLocal': itemLocal, 'veganOption': itemVegan}];
-    // cartArrayStore.push(storeItems)
-    console.log(cartArrayStore);
-    // cartArray.push({price: itemCost, pLocal: itemLocal, veganOption: itemVegan});
+    //// Push the button data to the array
     cartArray.push(storeItems[0]);
-    // let cartParse = JSON.parse(cartArray)
-
-    console.log(cartArray[0]);
-    // let showMe = JSON.parse(cartArrayStore);
-    // console.log(showMe);
+    //// Add the button data to the string from localstorage
     cartArrayStore =  cartArray.concat(cartArrayStore);
-    console.log(cartArrayStore);
+    //// Store the new array as a string in the local storage
     localStorage.setObj("cartList", cartArrayStore);
-    console.log(localStorage.getObj("cartList"));
-
+    //// Add the button price value to the shopping cart total
     let cartTotal = Number(document.getElementById("ShopCart").innerText);
     cartTotal = Number(localStorage.getItem("gTotal")) + Number(buttonData.value);
-    
-    localStorage.setItem("gTotal", cartTotal);
-    // localStorage.setItem("cartList", cartArray.push());
-    
+    //// Set the new value of the local storage
+    localStorage.setItem("gTotal", cartTotal);    
+    //// Display the subtotal from the localstorage
     document.getElementById("ShopCart").innerText = localStorage.getItem("gTotal");
 
     ShowCart();
 }
 
 function ShowCart(){
-    let cartArrays = localStorage.getObj("cartList");
-    let cartArrayList = cartArrays;
-    console.log(cartArrayList);
-
-    let getCart = cartArrayList;
+    
+    //// Grab the localstorage string/array
+    let getCart = localStorage.getObj("cartList");
+    //// Get reference to the table we want to change.
     let text = document.getElementById("shopCartTable");
-    var shopRow = "";
-    console.log(getCart);
+    let shopRow = "";
+    //// Removes last null object in array
+    if(getCart.includes(null)){
+        getCart.pop();
+    }
 
+    //// Loop theough array an populate the table with items in array
     for(let i = 0; i < getCart.length; i++){
-        console.log(getCart[i]);
-        shopRow = "<tr>";
+
+        shopRow = "<tr class='shopTable'>";
         shopRow += "<td>" + getCart[i].price + "</td>";
         shopRow += "<td>" + getCart[i].pLocal + "</td>";
-        shopRow += "<td>" + getCart[i].veganOption + "</td></tr>";
+        shopRow += "<td>" + getCart[i].veganOption + "</td>";
+        shopRow += "<td>" + "<button type='button' class='btn btn-danger glyphicon glyphicon-minus' data-arrValue=" + [i] +" onClick='(removeFromCart(this))'>" + "<td></tr>";
+        //// For each item in the array add to the HTML
+        text.innerHTML += shopRow;
     }
-    console.log(shopRow);
-    
-    text.innerHTML += shopRow;
+}
+
+function removeFromCart(arrItem){
+    //// Get references to local storage items
+    let itemArr = localStorage.getObj("cartList");
+    let itemCost = localStorage.getItem("gTotal");
+    let itemPlace = arrItem.dataset.arrvalue
+    //// Decrease the subtotal and item from array
+    itemCost -= itemArr[itemPlace].price;
+    itemArr.splice(itemPlace, 1);
+    localStorage.setObj("cartList", itemArr);
+    localStorage.setItem("gTotal", itemCost);
+    //// Sets the new array/object values to local storage
+    document.getElementById("ShopCart").innerText = localStorage.getItem("gTotal");
+    location.reload();
+
 }
